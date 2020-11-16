@@ -10,8 +10,8 @@ width = 600
 height = 400
 
 PIXELS = 784
-TRAIN_SIZE = 800
-TOTAL = 1000
+TRAIN_SIZE = 2400
+TOTAL = 3000
 
 dataDir = "data"
 
@@ -46,6 +46,7 @@ for i in range(len(doodle)):
     trainingLabel.extend(forTrain["label"])
     testingData.extend(forTest["testing"])
     testingLabel.extend(forTest["label"])
+
 
 nn = Neural_Network(784, 64, 7, 0.01)
 
