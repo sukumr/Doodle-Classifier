@@ -21,10 +21,11 @@ doodleLabel = []
 def load_data(dataDir):
     for numpyFile in os.listdir(dataDir):
         doodle.append(numpyFile)
-        doodleLabel.append(numpyFile.split('.')[0].upper())
+        doodleLabel.append(numpyFile.split('.')[0].upper()) # labelling the data
 
 load_data(dataDir)
 
+# dividing the data into test and train set
 def prepare_data(doodle_data, label):
     data = np.load(os.path.join(dataDir, doodle_data))
     data_train = data[0:TRAIN_SIZE, :]
@@ -55,7 +56,7 @@ def shuffled_data(a, b):
     data = np.array(a)
     label = np.array(b)
     assert len(data) == len(label)
-    p = np.random.permutation(len(data))
+    p = np.random.permutation(len(data)) # shuffling 
     return data[p], label[p]
 
 # Train function
@@ -64,7 +65,7 @@ def train_epoch(training, labels):
     for i in range(len(train_list)):
     # for i in range(1):
         data = train_list[i]
-        inputs = data.ravel() / 255
+        inputs = data.ravel() / 255 # Flattening and normalizing
         lbl = label_list[i] 
         targets = [0] * 7
         targets[lbl] = 1
@@ -101,6 +102,15 @@ pygame.display.set_caption("Doodle Classifier")
 
 clock = pygame.time.Clock()
 
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
+ROWS, COLS = 56, 56
+
+OFFSET = 20
+CELL_SIZE = 5
+
 OPEN_SANS = "OpenSans-Regular.ttf"
 buttonFont = pygame.font.Font(OPEN_SANS, 28)
 displayFont = pygame.font.Font(OPEN_SANS, 20)
@@ -111,40 +121,31 @@ board_height = height
 board_rect = pygame.Rect(0, 0, board_width, board_height)
 
 button_TrainRect = pygame.Rect((width * 4 / 6), (2.5 / 10) * height, width / 4, 50)
-buttonTrain = buttonFont.render("Train", True, "black")
+buttonTrain = buttonFont.render("Train", True, "BLACK")
 buttonTrainRect = buttonTrain.get_rect()
 buttonTrainRect.center = button_TrainRect.center
 
 button_GuessRect = pygame.Rect((width * 4 / 6), (4 / 10) * height, width / 4, 50)
-buttonGuess = buttonFont.render("Guess", True, "black")
+buttonGuess = buttonFont.render("Guess", True, "BLACK")
 buttonGuessRect = buttonGuess.get_rect()
 buttonGuessRect.center = button_GuessRect.center
 
 button_ResetRect = pygame.Rect((width * 4 / 6), (5.5 / 10) * height, width / 4, 50)
-buttonReset = buttonFont.render("Clear", True, "black")
+buttonReset = buttonFont.render("Clear", True, "BLACK")
 buttonResetRect = buttonReset.get_rect()
 buttonResetRect.center = button_ResetRect.center
 
 def display(string):
     text = string
-    text = displayFont.render(text, True, "white")
+    text = displayFont.render(text, True, "WHITE")
     textRect = text.get_rect()
     textRect.center = ((4.8 / 6) * width, (2.5 / 3) * height)
     screen.blit(text, textRect)
 
 
-ROWS, COLS = 56, 56
-
-OFFSET = 20
-CELL_SIZE = 5
-
-# Colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
 handwriting = [[0] * COLS for _ in range(ROWS)]
 
-screen.fill("black")
+screen.fill("BLACK")
 
 while True:
 
@@ -178,7 +179,7 @@ while True:
 
             elif mouse and buttonResetRect.collidepoint(mouse):
                 handwriting = [[0] * COLS for _ in range(ROWS)]
-                screen.fill("black")
+                screen.fill("BLACK")
 
     click, _, _ = pygame.mouse.get_pressed()
     if click == 1:
@@ -191,13 +192,14 @@ while True:
     for i in range(ROWS):
         row = []
         for j in range(COLS):
+            # Creating rectangle
             rect = pygame.Rect(
                 OFFSET + j * CELL_SIZE, OFFSET + i * CELL_SIZE, CELL_SIZE, CELL_SIZE
             )
 
             # If cell has been written on, darken cell
             if handwriting[i][j]:
-                channel = 255 - (handwriting[i][j] * 255)
+                channel = 255 - (handwriting[i][j] * 255) # color
                 pygame.draw.rect(screen, (channel, channel, channel), rect)
 
             # Draw blank cell
@@ -215,16 +217,16 @@ while True:
                 if i + 1 < ROWS and j + 1 < COLS:
                     handwriting[i + 1][j + 1] = 190 / 255
 
-    pygame.draw.rect(screen, "black", board_rect, 10)
-    # pygame.draw.rect(screen, 'black', panel_rect)
+    pygame.draw.rect(screen, "BLACK", board_rect, 10)
+    # pygame.draw.rect(screen, 'BLACK', panel_rect)
 
-    pygame.draw.rect(screen, "white", button_TrainRect)
+    pygame.draw.rect(screen, "WHITE", button_TrainRect)
     screen.blit(buttonTrain, buttonTrainRect)
 
-    pygame.draw.rect(screen, "white", button_GuessRect)
+    pygame.draw.rect(screen, "WHITE", button_GuessRect)
     screen.blit(buttonGuess, buttonGuessRect)
 
-    pygame.draw.rect(screen, "white", button_ResetRect)
+    pygame.draw.rect(screen, "WHITE", button_ResetRect)
     screen.blit(buttonReset, buttonResetRect)
 
     pygame.display.flip()

@@ -14,6 +14,7 @@ imgdata = np.load("bird.npy")
 # Considering only one image for visualization
 sample = imgdata[209:210, :]
 print(sample)
+
 # converting a Numpy array to PIL image
 # img = Image.fromarray(sample, "L") 
 img = Image.fromarray(sample.reshape(28, 28), "L") # L mode indicates the array values represents luminance.
@@ -27,5 +28,5 @@ for i in range(1000):
     data.append(new_data)
 
 # save as 
-# save("bird1000", data)
+save("bird1000", data)
 
